@@ -1,4 +1,6 @@
 
+import java.util.Stack;
+
 class BinarySearchTree {
 
     // Class containing left and right child of current node and key value 
@@ -52,13 +54,28 @@ class BinarySearchTree {
         inorderRec(root);
     }
 
-    // A utility function to
-    // do inorder traversal of BST
+    // A utility function to do inorder traversal of BST
     void inorderRec(Node root) {
         if (root != null) {
             inorderRec(root.left);
-            System.out.println(root.key);
+            System.out.print(root.key + " ");
             inorderRec(root.right);
+        }
+    }
+
+    void preorderRec(Node root) {
+        if (root != null) {
+            System.out.print(root.key + " ");
+            preorderRec(root.left);
+            preorderRec(root.right);
+        }
+    }
+
+    void postorderRec(Node root) {
+        if (root != null) {
+            postorderRec(root.left);
+            postorderRec(root.right);
+            System.out.print(root.key + " ");
         }
     }
 
@@ -78,27 +95,89 @@ class BinarySearchTree {
         return search(root.left, key);
     }
 
+    public void insertIterative(int key) {
+        // A new key is inserted as a leave
+        Node node = new Node(key);
+        if (root == null) {
+            root = node;
+            return;
+        }
+        Node prev = null;
+        Node temp = root;
+        while (temp != null) {
+            if (temp.key > key) {
+                prev = temp;
+                temp = temp.left;
+            } else if (temp.key < key) {
+                prev = temp;
+                temp = temp.right;
+            }
+        }
+        if (prev.key > key) {
+            prev.left = node;
+        } else {
+            prev.right = node;
+        }
+    }
+
+    public void inorderWithStack() {
+        Node temp = root;
+        Stack<Node> stack = new Stack<>();
+        while (temp != null || !stack.isEmpty()) {
+            if (temp != null) {
+                stack.add(temp);
+                temp = temp.left;
+            } else {
+                temp = stack.pop();
+                System.out.print(temp.key + " ");
+                temp = temp.right;
+            }
+        }
+    }
+
     // Driver Code
     public static void main(String[] args) {
         BinarySearchTree tree = new BinarySearchTree();
 
-        tree.insert(50);
-        tree.insert(30);
-        tree.insert(20);
-        tree.insert(40);
-        tree.insert(70);
-        tree.insert(60);
-        tree.insert(80);
-
+//        tree.insert(50);
+//        tree.insert(30);
+//        tree.insert(20);
+//        tree.insert(40);
+//        tree.insert(70);
+//        tree.insert(60);
+//        tree.insert(80);
+// 8, 3,  1, 6, 4, 7, 10, 14, 13
+        tree.insert(8);
+        tree.insert(3);
+        tree.insert(1);
+        tree.insert(6);
+        tree.insert(4);
+        tree.insert(7);
+        tree.insert(10);
+        tree.insert(14);
+        tree.insert(13);
         // print inorder traversal of the BST
         System.out.println("The inorder traversal of BST is...");
-        tree.inorder();
+        tree.inorderWithStack();
 
         Node placeInTree = BinarySearchTree.search(root, 70);
         if (placeInTree == null) {
-            System.out.println(70 + " is not found in BST");
+            System.out.println("\n" + 70 + " is not found in BST");
         } else {
             System.out.println(placeInTree.key + " is found in BST");
         }
+
+        placeInTree = BinarySearchTree.search(root, 25);
+        if (placeInTree == null) {
+            System.out.println(25 + " is not found in BST");
+        } else {
+            System.out.println(placeInTree.key + " is found in BST");
+        }
+
+        System.out.println("The preorder traversal of BST is...");
+        tree.preorderRec(root);
+        System.out.println("\nThe postorder traversal of BST is...");
+        tree.postorderRec(root);
+
     }
 }
