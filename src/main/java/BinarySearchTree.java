@@ -1,4 +1,5 @@
 
+import java.util.LinkedList;
 import java.util.Stack;
 
 class BinarySearchTree {
@@ -135,6 +136,54 @@ class BinarySearchTree {
         }
     }
 
+    void TraverseByLevel(Node root) {
+        LinkedList<Node> queue = new LinkedList<>();
+
+        if (root != null) {
+            queue.add(root);
+        }
+        while (!queue.isEmpty()) {
+            Node n = queue.remove();
+            System.out.print(n.key + " ");
+            if (n.left != null) {
+                queue.add(n.left);
+            }
+            if (n.right != null) {
+                queue.add(n.right);
+            }
+        }
+    }
+
+    void TraverseByLevelShowingLevels(Node root) {
+        LinkedList<Node> queue = new LinkedList<>();
+        LinkedList<Integer> queueLevel = new LinkedList<>();
+
+        int actualLevel = 0;
+
+        if (root != null) {
+            queue.add(root);
+            queueLevel.add(1);
+        }
+        while (!queue.isEmpty()) {
+            Node n = queue.remove();
+            int level = queueLevel.remove();
+
+            if (level > actualLevel) {
+                actualLevel = level;
+                System.out.print("\nLevel " + actualLevel+ ":");
+            }
+            System.out.print(n.key + " ");
+            if (n.left != null) {
+                queue.add(n.left);
+                queueLevel.add(level + 1);
+            }
+            if (n.right != null) {
+                queue.add(n.right);
+                queueLevel.add(level + 1);
+            }
+        }
+    }
+
     // Driver Code
     public static void main(String[] args) {
         BinarySearchTree tree = new BinarySearchTree();
@@ -161,6 +210,7 @@ class BinarySearchTree {
         tree.inorderWithStack();
 
         Node placeInTree = BinarySearchTree.search(root, 70);
+
         if (placeInTree == null) {
             System.out.println("\n" + 70 + " is not found in BST");
         } else {
@@ -176,8 +226,15 @@ class BinarySearchTree {
 
         System.out.println("The preorder traversal of BST is...");
         tree.preorderRec(root);
+
         System.out.println("\nThe postorder traversal of BST is...");
         tree.postorderRec(root);
+
+        System.out.println("\nThe by level traverse of BST is...");
+        tree.TraverseByLevel(root);
+
+        System.out.println("\nThe by level traverse showing levels of BST is...");
+        tree.TraverseByLevelShowingLevels(root);
 
     }
 }
